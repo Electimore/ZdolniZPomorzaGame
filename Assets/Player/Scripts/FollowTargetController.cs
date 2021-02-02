@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 
+// p a i n
+
 public class FollowTargetController : MonoBehaviour
 {
     public float sense = -1f;
@@ -12,7 +14,7 @@ public class FollowTargetController : MonoBehaviour
     public Vector2 _move;
     public GameObject followTransform;
 
-    Health_controller hp_con;
+    private HealthController healthController;
 
 
     public void OnLook(InputValue value)
@@ -28,12 +30,12 @@ public class FollowTargetController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hp_con = GetComponent<Health_controller>();
+        healthController = GetComponent<HealthController>();
     }
 
     private void Update()
     {
-        if (hp_con.movable)
+        if (healthController.movable)
         {
             followTransform.transform.rotation *= Quaternion.AngleAxis(_look.y * sense, Vector3.right);
             followTransform.transform.rotation *= Quaternion.AngleAxis(_look.x * sense, Vector3.up);
