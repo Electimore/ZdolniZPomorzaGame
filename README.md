@@ -1,0 +1,2 @@
+# ZdolniZPomorzaGame
+Game for TFP
