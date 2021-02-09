@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class GamePauseUI : MonoBehaviour
 {
+    public GameObject rightHand;
+    public GameObject leftHand;
+
     public Text pausedText;
     public Text resumeText;
     public Text resumeKeyText;

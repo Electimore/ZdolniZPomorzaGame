@@ -35,7 +35,7 @@ public class HealthController : MonoBehaviour
         player.transform.position = playerspawner.transform.position;
         movable = true;
     }
-
+    
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "weapon_1" && attacked == false) //1 DMG weapon hit

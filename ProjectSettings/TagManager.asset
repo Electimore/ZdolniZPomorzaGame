@@ -7,6 +7,9 @@ TagManager:
   - EnemySpawner
   - weapon_1
   - weapon_picked
+  - weapon
+  - shield
+  - sheild_picked
   layers:
   - Default
   - TransparentFX
