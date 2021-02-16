@@ -17,12 +17,22 @@ public class PlayerController : MonoBehaviour
     float moveVertical;
     bool isWalking;
     bool isRunning;
-    
+    bool paused = false;
+
     private HealthController healthController;
+    private HUD hud;
+    private GamePauseUI gamePauseUI;
+    private GameOverUI gameOverUI;
 
     void Start()
     {
         healthController = GetComponent<HealthController>();
+        gameOverUI = player.GetComponent<GameOverUI>();
+        gamePauseUI = player.GetComponent<GamePauseUI>();
+        hud = player.GetComponent<HUD>();
+        gameOverUI.SetEnabled(false);
+        gamePauseUI.SetEnabled(false);
+
     }
 
     void Update()
@@ -57,11 +67,28 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("IsWalking", isWalking);
             anim.SetBool("IsRunning", isRunning);
         }
+        hud.SetHealth(healthController.hp);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Start();
+        }
+
+        if (healthController.alive && Input.GetKeyDown(KeyCode.Escape))
+        {
+            healthController.movable = paused;
+            anim.enabled = paused;
+            gamePauseUI.SetEnabled(!paused);
+
+            paused = !paused;
+        }
     }
 
     private void FixedUpdate()
     {
-        player.transform.position += transform.forward * Time.deltaTime * speed * moveVertical;
-        player.transform.position += transform.right * Time.deltaTime * speed * moveHorizontal;
+        if (healthController.movable)
+        {
+            player.transform.position += transform.forward * Time.deltaTime * speed * moveVertical;
+            player.transform.position += transform.right * Time.deltaTime * speed * moveHorizontal;
+        }
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public List<GameObject> weapons;
+    public List<GameObject> slots;
     public int current;
     public int maxInventorySize;
 
@@ -62,6 +63,7 @@ public class Inventory : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 PickRightHand(lookingAt.collider.gameObject);
+                ReplaceUIWeapons();
             }
         }
     }
@@ -121,5 +123,21 @@ public class Inventory : MonoBehaviour
         shieldToPick.transform.localRotation = Quaternion.Euler(0, -110, 180);
         shieldToPick.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
         shieldToPick.tag = "shield_picked";
+    }
+
+    void ReplaceUIWeapons()
+    {
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            GameObject toReplace = slots[i];
+            slots[i] = Instantiate(weapons[i]);
+            slots[i].transform.parent = toReplace.transform.parent;
+            slots[i].transform.localPosition = toReplace.transform.localPosition;
+            slots[i].transform.localRotation = toReplace.transform.localRotation;
+            slots[i].transform.localScale = toReplace.transform.localScale;
+            slots[i].SetActive(true);
+            Destroy(toReplace);
+            Debug.Log("me doin sth");
+        }
     }
 }
