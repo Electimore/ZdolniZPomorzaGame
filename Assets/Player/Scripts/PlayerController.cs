@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // TODO: fix convention
     public GameObject player;
     public GameObject rHandItem;
     public GameObject lHandItem;
+    public GameObject followTarget;
     public Animator anim;
     public Rigidbody rb;
 
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     bool isWalking;
     bool isRunning;
     bool paused = false;
+    bool canAttack = true;
 
     private HealthController healthController;
     private HUD hud;
@@ -53,10 +54,25 @@ public class PlayerController : MonoBehaviour
                 isWalking = !leftShiftPressed;
                 isRunning = leftShiftPressed;
             }
-
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (canAttack)
             {
-                anim.SetTrigger("Attack");
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    anim.SetTrigger("Attack");
+                    Invoke("AttackCooldown", 1f);
+                    canAttack = false;
+                    
+                        Vector3 forward = followTarget.transform.TransformDirection(Vector3.forward) * 10;
+
+                    if (Physics.Raycast(followTarget.transform.position, (forward), out lookingAt))
+                    {
+                        if (CheckIfLookingAtEnemy())
+                        {
+                            GameObject.Find(lookingAt.collider.gameObject.name).GetComponent<EnemyHealthController>().DealDamage(1f);
+                            Debug.Log("attacc");
+                        }
+                    }
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -90,5 +106,15 @@ public class PlayerController : MonoBehaviour
             player.transform.position += transform.forward * Time.deltaTime * speed * moveVertical;
             player.transform.position += transform.right * Time.deltaTime * speed * moveHorizontal;
         }
+    }
+
+    void AttackCooldown()
+    {
+        canAttack = true;
+    }
+
+    private bool CheckIfLookingAtEnemy()
+    {
+        return GameObject.Find(lookingAt.collider.gameObject.name).CompareTag("enemy");
     }
 }

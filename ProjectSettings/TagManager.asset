@@ -10,6 +10,7 @@ TagManager:
   - weapon
   - shield
   - sheild_picked
+  - enemy
   layers:
   - Default
   - TransparentFX
