@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private HUD hud;
     private GamePauseUI gamePauseUI;
     private GameOverUI gameOverUI;
+    private Inventory inventory;
 
     void Start()
     {
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
         hud = player.GetComponent<HUD>();
         gameOverUI.SetEnabled(false);
         gamePauseUI.SetEnabled(false);
+        inventory = player.GetComponent<Inventory>();
 
     }
 
@@ -54,25 +56,9 @@ public class PlayerController : MonoBehaviour
                 isWalking = !leftShiftPressed;
                 isRunning = leftShiftPressed;
             }
-            if (canAttack)
+            if (canAttack && Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
-                {
-                    anim.SetTrigger("Attack");
-                    Invoke("AttackCooldown", 1f);
-                    canAttack = false;
-                    
-                        Vector3 forward = followTarget.transform.TransformDirection(Vector3.forward) * 10;
-
-                    if (Physics.Raycast(followTarget.transform.position, (forward), out lookingAt))
-                    {
-                        if (CheckIfLookingAtEnemy())
-                        {
-                            GameObject.Find(lookingAt.collider.gameObject.name).GetComponent<EnemyHealthController>().DealDamage(1f);
-                            Debug.Log("attacc");
-                        }
-                    }
-                }
+                Attack();
             }
 
             if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -84,9 +70,11 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("IsRunning", isRunning);
         }
         hud.SetHealth(healthController.hp);
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             Start();
+            healthController.Start();
         }
 
         if (healthController.alive && Input.GetKeyDown(KeyCode.Escape))
@@ -105,6 +93,30 @@ public class PlayerController : MonoBehaviour
         {
             player.transform.position += transform.forward * Time.deltaTime * speed * moveVertical;
             player.transform.position += transform.right * Time.deltaTime * speed * moveHorizontal;
+        }
+    }
+
+    void Attack()
+    {
+        anim.SetTrigger("Attack");
+        Invoke("AttackCooldown", 1f);
+        canAttack = false;
+
+        Vector3 forward = followTarget.transform.TransformDirection(Vector3.forward) * 10;
+
+        if (Physics.Raycast(followTarget.transform.position, (forward), out lookingAt))
+        {
+            if (CheckIfLookingAtEnemy())
+            {
+                float distanceFromEnemy = Vector3.Distance(player.transform.position, GameObject.Find(lookingAt.collider.gameObject.name).transform.position);
+                if(distanceFromEnemy <= 0.9f)
+                {
+                    GameObject.Find(lookingAt.collider.gameObject.name)
+                        .GetComponent<EnemyHealthController>()
+                        .DealDamage(inventory.GetCurrentWeapon().damage);
+                    Debug.Log("attacc");
+                }
+            }
         }
     }
 

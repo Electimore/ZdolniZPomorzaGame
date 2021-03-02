@@ -137,7 +137,11 @@ public class Inventory : MonoBehaviour
             slots[i].transform.localScale = toReplace.transform.localScale;
             slots[i].SetActive(true);
             Destroy(toReplace);
-            Debug.Log("me doin sth");
         }
+    }
+
+    public Weapon GetCurrentWeapon()
+    {
+        return weapons[current].GetComponent<Weapon>();
     }
 }

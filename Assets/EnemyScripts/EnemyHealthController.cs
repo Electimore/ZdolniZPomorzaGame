@@ -5,27 +5,30 @@ using UnityEngine;
 public class EnemyHealthController : MonoBehaviour
 {
     public float health;
+    public bool alive;
 
     public Animator anim;
 
     void Start()
     {
         health = 5;
+        alive = true;
     }
 
-
-    void Update()
-    {
-        
-    }
-
-    public void DealDamage(float damage)
+public void DealDamage(float damage)
     {
         health -= damage;
         if(health <= 0)
         {
-            Die();
+            alive = false;
+            Invoke("Die", 0.5f);
+            this.GetComponent<EnemyController>().DropWeapons();
         }
+        Invoke("TakeDamage", 0.5f);
+    }
+
+    private void TakeDamage()
+    {
         anim.SetTrigger("TakingDamage");
     }
 
@@ -37,6 +40,6 @@ public class EnemyHealthController : MonoBehaviour
 
     public void Disappear()
     {
-        Destroy(this.gameObject.transform.parent.gameObject);
+        Destroy(this.gameObject);
     }
 }

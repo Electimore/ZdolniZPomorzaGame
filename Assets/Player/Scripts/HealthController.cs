@@ -18,7 +18,7 @@ public class HealthController : MonoBehaviour
     private GameOverUI gameOverUI;
 
 
-    void Start()
+    public void Start()
     {
         anim.Play("DieRecover");
         gameOverUI = player.GetComponent<GameOverUI>();
@@ -28,6 +28,7 @@ public class HealthController : MonoBehaviour
         alive = true;
         player.transform.position = playerspawner.transform.position;
         movable = true;
+        anim.enabled = true;
     }
     
     private void OnCollisionEnter(Collision collision)
@@ -38,13 +39,6 @@ public class HealthController : MonoBehaviour
             attacked = true;
             anim.SetTrigger("Gethit");
         }
-        if (hp <= 0 && alive) //Checks if player is alive
-        {
-            anim.SetTrigger("Die");
-            alive = false;
-            gameOverUI.SetEnabled(true);
-            movable = false;
-        }
     }
 
     private void OnCollisionExit(Collision collision)
@@ -52,9 +46,19 @@ public class HealthController : MonoBehaviour
         attacked = false;
     }
 
-
-    void Update()
+    public void RecieveDamage(float damage)
     {
-        
+        hp -= damage;
+    }
+
+    private void Update()
+    {
+        if (hp <= 0.99 && alive) //Checks if player is alive
+        {
+            anim.SetTrigger("Die");
+            alive = false;
+            gameOverUI.SetEnabled(true);
+            movable = false;
+        }
     }
 }
