@@ -14,6 +14,9 @@ public class EnemyController : MonoBehaviour
     float damageToDeal;
     float distanceFromPlayer;
     bool canAttack;
+    bool canHit;
+    bool playerNoticed;
+    bool refresh;
 
     private EnemyHealthController enemyHealthController;
 
@@ -27,22 +30,54 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        distanceFromPlayer = Vector3.Distance(this.transform.position, player.transform.position);
-
-        Ray ray = new Ray(enemy.transform.position, (player.transform.position - this.transform.position).normalized * 10);
-
-        if(distanceFromPlayer <= 1.1 && canAttack && enemyHealthController.alive && player.GetComponent<HealthController>().movable)
+        if(player.GetComponent<HealthController>().movable && player.GetComponent<HealthController>().alive)
         {
-            AttackPlayer();
+            distanceFromPlayer = Vector3.Distance(this.transform.position, player.transform.position);
+
+            if (distanceFromPlayer <= 5 && distanceFromPlayer >= 1.1)
+            {
+                playerNoticed = true;
+            }
+            else
+            {
+                playerNoticed = false;
+            }
+
+            if (playerNoticed == true)
+            {
+                GetComponent<EnemyMovement>().GoToGameObject(player);
+            }
+
+            anim.SetBool("Walking", playerNoticed);
+
+            if (distanceFromPlayer <= 1.1 && canAttack && enemyHealthController.alive && player.GetComponent<HealthController>().movable)
+            {
+                AttackPlayer();
+            }
         }
     }
 
     void AttackPlayer()
     {
+        float chanceToHit = Random.Range(0f, 5f);
         float chanceToAttack = Random.Range(0f, 10f);
+
+        if (!player.GetComponent<PlayerController>().isWalking && chanceToHit*2 >= 3)
+        {
+            canHit = true;
+        }
+        else if(player.GetComponent<PlayerController>().isWalking && chanceToHit >= 3)
+        {
+            canHit = true;
+        }
+        else
+        {
+            canHit = false;
+        }
+        
         canAttack = false;
-        Invoke("AttackCooldown", 1.5f);
-        if (chanceToAttack <= 4 && chanceToAttack >= 1)
+        Invoke("AttackCooldown", 2f);
+        if (chanceToAttack <= 4 && chanceToAttack >= 1 && canHit)
         {
             anim.SetTrigger("AttackRight");
             Invoke("DealPlayerDamage", 0.5f);

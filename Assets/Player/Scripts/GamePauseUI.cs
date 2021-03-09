@@ -3,9 +3,7 @@ using UnityEngine.UI;
 
 public class GamePauseUI : MonoBehaviour
 {
-    public GameObject rightHand;
-    public GameObject leftHand;
-
+    public GameObject enemySpawnButton;
     public Text pausedText;
     public Text resumeText;
     public Text resumeKeyText;
@@ -19,5 +17,6 @@ public class GamePauseUI : MonoBehaviour
         resumeKeyText.enabled = state;
         restartText.enabled = state;
         restartKeyText.enabled = state;
+        enemySpawnButton.SetActive(state);
     }
 }

@@ -35,9 +35,8 @@ public class HealthController : MonoBehaviour
     {
         if (collision.gameObject.tag == "weapon_1" && attacked == false) //1 DMG weapon hit
         {
-            hp -= 1;
             attacked = true;
-            anim.SetTrigger("Gethit");
+            RecieveDamage(1);
         }
     }
 
@@ -49,11 +48,12 @@ public class HealthController : MonoBehaviour
     public void RecieveDamage(float damage)
     {
         hp -= damage;
+        anim.SetTrigger("Gethit");
     }
 
     private void Update()
     {
-        if (hp <= 0.99 && alive) //Checks if player is alive
+        if (hp <= 0.99 && alive)
         {
             anim.SetTrigger("Die");
             alive = false;

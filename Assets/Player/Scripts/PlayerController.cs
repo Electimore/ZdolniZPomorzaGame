@@ -15,10 +15,11 @@ public class PlayerController : MonoBehaviour
     float speed = 1.5f;
     float moveHorizontal;
     float moveVertical;
-    bool isWalking;
-    bool isRunning;
+    public bool isWalking;
+    public bool isRunning;
     bool paused = false;
     bool canAttack = true;
+    public bool leftShiftPressed;
 
     private HealthController healthController;
     private HUD hud;
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                var leftShiftPressed = Input.GetKey(KeyCode.LeftShift);
+                leftShiftPressed = Input.GetKey(KeyCode.LeftShift);
                 speed = leftShiftPressed ? 2.5f : 1.5f;
                 isWalking = !leftShiftPressed;
                 isRunning = leftShiftPressed;
@@ -108,10 +109,11 @@ public class PlayerController : MonoBehaviour
         {
             if (CheckIfLookingAtEnemy())
             {
-                float distanceFromEnemy = Vector3.Distance(player.transform.position, GameObject.Find(lookingAt.collider.gameObject.name).transform.position);
-                if(distanceFromEnemy <= 0.9f)
+                float distanceFromEnemy = Vector3.Distance(player.transform.position, lookingAt.collider.gameObject.transform.position);
+                if(distanceFromEnemy <= 1f)
                 {
-                    GameObject.Find(lookingAt.collider.gameObject.name)
+                    Debug.Log(lookingAt.collider.gameObject);
+                    lookingAt.collider.gameObject
                         .GetComponent<EnemyHealthController>()
                         .DealDamage(inventory.GetCurrentWeapon().damage);
                     Debug.Log("attacc");
@@ -127,6 +129,6 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckIfLookingAtEnemy()
     {
-        return GameObject.Find(lookingAt.collider.gameObject.name).CompareTag("enemy");
+        return lookingAt.collider.gameObject.CompareTag("enemy");
     }
 }
