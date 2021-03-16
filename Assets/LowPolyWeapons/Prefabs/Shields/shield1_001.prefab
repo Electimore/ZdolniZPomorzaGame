@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2079883206259335097}
   - component: {fileID: 2714890357460640878}
   - component: {fileID: 3955801007246012162}
+  - component: {fileID: -255953346278261108}
   m_Layer: 0
   m_Name: shield1_001
   m_TagString: Untagged
@@ -129,3 +130,17 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300282, guid: 0674c08f5a480b74881afd54243c94ba, type: 3}
+--- !u!114 &-255953346278261108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652740541601388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c68647a46d830a4baf6f18ba239c0bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDurability: 8
+  durability: 0

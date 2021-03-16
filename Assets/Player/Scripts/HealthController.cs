@@ -16,7 +16,7 @@ public class HealthController : MonoBehaviour
     public bool movable;
 
     private GameOverUI gameOverUI;
-
+    private Shield shield;
 
     public void Start()
     {
@@ -45,14 +45,30 @@ public class HealthController : MonoBehaviour
         attacked = false;
     }
 
-    public void RecieveDamage(float damage)
+    public void RecieveDamage(float incomingDamage)
     {
-        hp -= damage;
-        anim.SetTrigger("Gethit");
+        if(shield.durability <= 0)
+        {
+            hp -= incomingDamage;
+            anim.SetTrigger("Gethit");
+        }
+        else
+        {
+            if(shield.durability <= incomingDamage)
+            {
+                shield.durability = 0;
+            }
+            else
+            {
+                shield.durability -= incomingDamage;
+            }
+        }
+        
     }
 
     private void Update()
     {
+        shield = player.GetComponent<Inventory>().shield.GetComponent<Shield>();
         if (hp <= 0.99 && alive)
         {
             anim.SetTrigger("Die");

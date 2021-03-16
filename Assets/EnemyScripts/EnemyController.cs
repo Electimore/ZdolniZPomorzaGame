@@ -109,9 +109,8 @@ public class EnemyController : MonoBehaviour
 
     public void DropWeapons()
     {
-        //float dropRandom = Random.Range(0f, 10f);
-        float dropRandom = 8;
-        if(dropRandom >= 7)
+        int dropRandom = Random.Range(0, 10);
+        if(dropRandom >= 6)
         {
             GameObject droppedWeapon = rightHand.transform.GetChild(0).gameObject;
             droppedWeapon.transform.parent = null;

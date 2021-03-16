@@ -20,12 +20,14 @@ public class PlayerController : MonoBehaviour
     bool paused = false;
     bool canAttack = true;
     public bool leftShiftPressed;
+    bool canDefend = true;
 
     private HealthController healthController;
     private HUD hud;
     private GamePauseUI gamePauseUI;
     private GameOverUI gameOverUI;
     private Inventory inventory;
+    private Shield shield;
 
     void Start()
     {
@@ -36,11 +38,11 @@ public class PlayerController : MonoBehaviour
         gameOverUI.SetEnabled(false);
         gamePauseUI.SetEnabled(false);
         inventory = player.GetComponent<Inventory>();
-
+        shield = inventory.shield.GetComponent<Shield>();
     }
 
     void Update()
-    {
+    { 
         moveHorizontal = Input.GetAxis("Horizontal");
         moveVertical = Input.GetAxis("Vertical");
 
@@ -62,9 +64,12 @@ public class PlayerController : MonoBehaviour
                 Attack();
             }
 
-            if (Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1) && canDefend)
             {
+                shield.RestoreShield();
                 anim.SetTrigger("Defend");
+                canDefend = false;
+                Invoke("DefendCooldown", 10f);
             }
             
             anim.SetBool("IsWalking", isWalking);
@@ -116,6 +121,7 @@ public class PlayerController : MonoBehaviour
                     lookingAt.collider.gameObject
                         .GetComponent<EnemyHealthController>()
                         .DealDamage(inventory.GetCurrentWeapon().damage);
+                   
                     Debug.Log("attacc");
                 }
             }
@@ -127,8 +133,18 @@ public class PlayerController : MonoBehaviour
         canAttack = true;
     }
 
+    void DefendCooldown()
+    {
+        canDefend = true;
+    }
+
     private bool CheckIfLookingAtEnemy()
     {
         return lookingAt.collider.gameObject.CompareTag("enemy");
+    }
+
+    public void OnShieldPickup()
+    {
+        shield = inventory.shield.GetComponent<Shield>();
     }
 }

@@ -11,6 +11,7 @@ public class Inventory : MonoBehaviour
     public int current;
     public int maxInventorySize;
 
+    public GameObject player;
     public GameObject shield;
     public GameObject followTarget;
 
@@ -116,6 +117,8 @@ public class Inventory : MonoBehaviour
         shield.tag = "shield";
 
         shield = shieldToPick;
+
+        player.GetComponent<PlayerController>().OnShieldPickup();
 
         GameObject shieldSlot = GameObject.Find("Shield");
         shieldToPick.transform.parent = shieldSlot.transform;
