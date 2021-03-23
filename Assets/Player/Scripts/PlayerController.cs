@@ -75,7 +75,6 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("IsWalking", isWalking);
             anim.SetBool("IsRunning", isRunning);
         }
-        hud.SetHealth(healthController.hp);
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -117,12 +116,9 @@ public class PlayerController : MonoBehaviour
                 float distanceFromEnemy = Vector3.Distance(player.transform.position, lookingAt.collider.gameObject.transform.position);
                 if(distanceFromEnemy <= 1f)
                 {
-                    Debug.Log(lookingAt.collider.gameObject);
                     lookingAt.collider.gameObject
                         .GetComponent<EnemyHealthController>()
                         .DealDamage(inventory.GetCurrentWeapon().damage);
-                   
-                    Debug.Log("attacc");
                 }
             }
         }

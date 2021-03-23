@@ -17,11 +17,13 @@ public class HealthController : MonoBehaviour
 
     private GameOverUI gameOverUI;
     private Shield shield;
+    private HUD hud;
 
     public void Start()
     {
         anim.Play("DieRecover");
         gameOverUI = player.GetComponent<GameOverUI>();
+        hud = player.GetComponent<HUD>();
         hp = 20f;
         maxHp = 20f;
         attacked = false;
@@ -68,6 +70,8 @@ public class HealthController : MonoBehaviour
 
     private void Update()
     {
+        hud.SetHealth(hp, maxHp);
+
         shield = player.GetComponent<Inventory>().shield.GetComponent<Shield>();
         if (hp <= 0.99 && alive)
         {
