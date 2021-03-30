@@ -11,6 +11,7 @@ TagManager:
   - shield
   - sheild_picked
   - enemy
+  - LevelStart
   layers:
   - Default
   - TransparentFX

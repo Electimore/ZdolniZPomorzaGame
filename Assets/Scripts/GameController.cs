@@ -8,6 +8,10 @@ public class GameController : MonoBehaviour
     public List<GameObject> weapons;
     public List<GameObject> enemies;
     public GameObject enemyPrefab;
+    public bool game;
+
+    public List<GameObject> doors;
+    public List<GameObject> detectors;
 
     int enemyCount;
     int enemiesAlive;
@@ -19,12 +23,19 @@ public class GameController : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         hud = player.GetComponent<HUD>();
+        game = false;
+        ShowDoors(true);
     }
 
     void Update()
     {
         CheckForEnemiesAlive();
         hud.SetEnemyCount(enemiesAlive, enemyCount);
+
+        if(enemiesAlive < 1 && game)
+        {
+            ShowDoors(false);
+        }
     }
 
     public void SpawnEnemies()
@@ -56,5 +67,22 @@ public class GameController : MonoBehaviour
     public void CheckForEnemiesAlive()
     {
         enemiesAlive = GameObject.FindGameObjectsWithTag("enemy").Length;
+    }
+
+    public void ShowDoors(bool visible)
+    {
+        for (int i = 0; i < doors.Count; i++)
+        {
+            doors[i].SetActive(visible);
+        }
+        for (int i = 0; i < detectors.Count; i++)
+        {
+            detectors[i].SetActive(!visible);
+        }
+    }
+
+    public void EndGame()
+    {
+        Debug.Log("Restart...");
     }
 }

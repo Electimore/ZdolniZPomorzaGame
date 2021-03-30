@@ -28,6 +28,15 @@ public class PlayerController : MonoBehaviour
     private GameOverUI gameOverUI;
     private Inventory inventory;
     private Shield shield;
+    private GameController gameController;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.gameObject.tag.Equals("Finish"))
+        {
+            gameController.EndGame();
+        }
+    }
 
     void Start()
     {
@@ -39,6 +48,7 @@ public class PlayerController : MonoBehaviour
         gamePauseUI.SetEnabled(false);
         inventory = player.GetComponent<Inventory>();
         shield = inventory.shield.GetComponent<Shield>();
+        gameController = GameObject.Find("GameMaster").GetComponent<GameController>();
     }
 
     void Update()
@@ -90,6 +100,21 @@ public class PlayerController : MonoBehaviour
 
             paused = !paused;
         }
+
+        Vector3 forward = followTarget.transform.TransformDirection(Vector3.forward) * 10;
+
+        if (Physics.Raycast(followTarget.transform.position, (forward), out lookingAt))
+        {
+            if (CheckIfLookingAtSatrtPoint() && !gameController.game)
+            {
+                lookingAt.collider.GetComponent<ThingyOutliner>().LookingAtObject();
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    gameController.SpawnEnemies();
+                    gameController.game = true;
+                }
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -137,6 +162,11 @@ public class PlayerController : MonoBehaviour
     private bool CheckIfLookingAtEnemy()
     {
         return lookingAt.collider.gameObject.CompareTag("enemy");
+    }
+
+    private bool CheckIfLookingAtSatrtPoint()
+    {
+        return lookingAt.collider.gameObject.CompareTag("LevelStart");
     }
 
     public void OnShieldPickup()
